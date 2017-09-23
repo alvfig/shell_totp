@@ -1,5 +1,5 @@
 # shell_totp
-Shell scritp to show time-based one-time passwords - TOTP. It's like Google Authenticator on a TTY. You execute `tokens` command and view your codes with a countdown timer.
+Shell scritp to show time-based one-time passwords - TOTP. It's like Google Authenticator on a TTY. You execute `tokens` command and view your 2FA codes with a countdown timer.
 ```
 2017-09-22T22:20:12-03:00
 Remaining :     18
@@ -27,7 +27,7 @@ Facebook XXXXXXXXXXXXXXXX
 Google YYYYYYYYYYYYYYYY
 Twitter ZZZZZZZZZZZZZZZZ
 ```
-Edit the tokens executable file putting the secrets file on the variable `secretsfile`, like the excerpt bellow.
+Edit the `tokens` executable file putting the secrets file on the variable `secretsfile`, like the excerpt bellow.
 ```
 secretsfile=~/bin/tokens.secrets
 ```
