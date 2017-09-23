@@ -1,0 +1,26 @@
+#!/bin/sh
+# tokens - shows time-based one-time passwords - TOTP
+# Depends on oathtool package
+
+#secretsfile=~/bin/tokens.secrets
+secretsfile=tokens.secrets
+
+printtoken()
+{
+    local token
+    token=`oathtool --totp --base32 $2`
+    printf '%-10s: %s\n' $1 $token
+}
+
+while true; do
+    clear
+    seconds=`date '+%S'`
+    remaining=`expr 30 - $seconds % 30`
+    now=`date --iso-8601=seconds`
+    printf '%s\nRemaining : %6d\n\n' $now $remaining
+    while read name secret; do
+        printtoken $name $secret
+    done < $secretsfile
+    echo; echo -n "Type Ctrl-C to exit"
+    sleep 1
+done
