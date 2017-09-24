@@ -11,7 +11,7 @@ Twitter   : 772316
 Type Ctrl-C to exit
 ```
 ## Installing
-It depends on `oathtool` package. You must install it first like the example bellow to Debian based distros.
+It depends on `oathtool` package. You must install it first like the example below to Debian based distros.
 ```
 $ sudo apt install oathtool
 ```
@@ -27,7 +27,7 @@ Facebook XXXXXXXXXXXXXXXX
 Google YYYYYYYYYYYYYYYY
 Twitter ZZZZZZZZZZZZZZZZ
 ```
-Edit the `tokens` executable file putting the secrets file on the variable `secretsfile`, like the excerpt bellow.
+Edit the `tokens` executable file putting the secrets file on the variable `secretsfile`, like the excerpt below.
 ```
 secretsfile=~/bin/tokens.secrets
 ```
