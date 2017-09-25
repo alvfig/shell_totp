@@ -1,12 +1,12 @@
 # shell_totp
 Shell script to show time-based one-time passwords - TOTP. It's like Google Authenticator on a TTY. You execute `tokens` command and view your 2FA codes with a countdown timer.
 ```
-2017-09-22T22:20:12-03:00
-Remaining :     18
+2017-09-25T12:41:12-03:00
+Remaining :     18 ::::::::::::::::::............
 
-Facebook  : 421785
-Google    : 584399
-Twitter   : 772316
+Facebook  : 916476
+Google    : 738429
+Twitter   : 551011
 
 Type Ctrl-C to exit
 ```
@@ -35,7 +35,7 @@ You can play with the variable `barstyle` too, if you dare.
 ```
 barstyle='#_'
 ```
-It's not a bad idea to give some protection to your secrets file.
+Finally, it's not a bad idea to give some protection to your secrets file.
 ```
 $ chmod 0600 ~/bin/tokens.secrets
 ```
