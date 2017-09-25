@@ -5,12 +5,19 @@
 #secretsfile=~/bin/tokens.secrets
 secretsfile=tokens.secrets
 
+#barstyle='=-'
+#barstyle='#_'
+#barstyle='*.'
+barstyle=':.'
+
 while true; do
     clear
     seconds=`date '+%S'`
-    remaining=`expr 30 - $seconds % 30`
+    elapsed=`expr $seconds % 30`
+    remaining=`expr 30 - $elapsed`
+    bar=`printf '%0*d%*s' $remaining 0 $elapsed '' | tr '0 ' "$barstyle"`
     now=`date --iso-8601=seconds`
-    printf '%s\nRemaining : %6d\n\n' $now $remaining
+    printf '%s\nRemaining : %6d %s\n\n' $now $remaining "$bar"
     while read name secret; do
         token=`oathtool --totp --base32 $secret`
         printf '%-10s: %s\n' $name $token

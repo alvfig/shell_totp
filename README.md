@@ -31,6 +31,10 @@ Edit the `tokens` executable file putting the secrets file on the variable `secr
 ```
 secretsfile=~/bin/tokens.secrets
 ```
+You can play with the variable `barstyle` too, if you dare.
+```
+barstyle='#_'
+```
 It's not a bad idea to give some protection to your secrets file.
 ```
 $ chmod 0600 ~/bin/tokens.secrets
