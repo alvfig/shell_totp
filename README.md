@@ -27,7 +27,7 @@ Facebook XXXXXXXXXXXXXXXX
 Google YYYYYYYYYYYYYYYY
 Twitter ZZZZZZZZZZZZZZZZ
 ```
-Create a setup file on your home directory named `.tokensrc` containing the variables `secretsfile` and `barstyle`, just like the same named sample file.
+Create a setup file on your home directory named `.tokensrc`, containing the variables `secretsfile` and `barstyle`, just like the same named sample file.
 
 The variable `secretsfile` contains the path and name of the secrets file above, like the excerpt below.
 ```
