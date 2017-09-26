@@ -2,13 +2,10 @@
 # tokens - shows time-based one-time passwords - TOTP
 # Depends on oathtool package
 
-#secretsfile=~/bin/tokens.secrets
-secretsfile=tokens.secrets
-
-#barstyle='=-'
-#barstyle='#_'
-#barstyle='*.'
-barstyle=':.'
+rc=~/.tokensrc
+[ -r $rc ] && . $rc
+[ -z "$secretsfile" ] && secretsfile=tokens.secrets
+[ -z "$barsytle" ] && barstyle=':.'
 
 while true; do
     clear
