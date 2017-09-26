@@ -10,7 +10,7 @@ Twitter   : 551011
 
 Type Ctrl-C to exit
 ```
-## Installing
+## Install
 It depends on `oathtool` package. You must install it first like the example below to Debian based distros.
 ```
 $ sudo apt install oathtool
@@ -20,14 +20,16 @@ Copy the `tokens` file to a PATH directory and make it executable.
 $ cp tokens ~/bin/
 $ chmod +x ~/bin/tokens
 ```
-## Configuring
+## Configure
 Create a secrets file like the sample one, with a name and a secret at each line, separated by a space.
 ```
 Facebook XXXXXXXXXXXXXXXX
 Google YYYYYYYYYYYYYYYY
 Twitter ZZZZZZZZZZZZZZZZ
 ```
-Edit the `tokens` executable file putting the secrets file on the variable `secretsfile`, like the excerpt below.
+Create a setup file on your home directory named `.tokensrc` containing the variables `secretsfile` and `barstyle`, just like the same named sample file.
+
+The variable `secretsfile` contains the path and name of the secrets file above, like the excerpt below.
 ```
 secretsfile=~/bin/tokens.secrets
 ```

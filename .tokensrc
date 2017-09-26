@@ -1,0 +1,9 @@
+# .tokensrc - tokens setup
+
+#secretsfile=~/bin/tokens.secrets
+secretsfile=tokens.secrets
+
+#barstyle='=-'
+#barstyle='#_'
+#barstyle='*.'
+barstyle=':.'
