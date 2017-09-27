@@ -41,7 +41,7 @@ You can play with the variable `barstyle` too, if you dare.
 ```
 barstyle='#_'
 ```
-Finally, it's not a bad idea to give some protection to your secrets file.
+Finally, it's not a bad idea to give some privacy to your secrets file.
 ```
 $ chmod 0600 ~/bin/tokens.secrets
 ```
