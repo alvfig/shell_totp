@@ -45,4 +45,7 @@ Finally, it's not a bad idea to give some privacy to your secrets file.
 ```
 $ chmod 0600 ~/bin/tokens.secrets
 ```
+## Troubleshoot
+Remember that the clock of the system must be correct.
+
 That's it!
