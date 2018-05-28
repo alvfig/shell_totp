@@ -2,6 +2,7 @@
 # tokens - shows time-based one-time passwords - TOTP
 # Depends on oathtool package
 
+# Initial settings
 rc=~/.tokensrc
 [ -r $rc ] && . $rc
 [ -z "$secretsfile" ] && secretsfile=tokens.secrets
@@ -10,12 +11,15 @@ XCLIP=""
 [ -z "$XCLIP" ] && which xclip > /dev/null && XCLIP="xclip"
 [ -z "$XCLIP" ] && which xsel > /dev/null && XCLIP="xsel"
 
+# Calculate and print the tokens
 lasthalf=-1
 while true; do
+    # Eval the time period and verify if must calc the tokens
     seconds=$(date '+%-S')
     half=$(($seconds / 30))
     remaining=$((30 - $seconds % 30))
     if [ $half -ne $lasthalf ]; then
+        # Calculate the tokens
         lasthalf=$half
         declare -a keys=({1..9} {a..z} {A..Z})
         declare -A tokens
@@ -25,14 +29,38 @@ while true; do
             tokens[${keys[$cnt]}]="$name $token"
             cnt=$((1 + $cnt))
         done < $secretsfile
-        clear
+
+        # Format in columns
+        cols=$(($(tput cols) / 28))
+        rows=$((${#tokens[@]} / $cols))
+        unset lines
+        declare -a lines
+        line=0
         cnt=0
         while [ $cnt -lt ${#tokens[@]} ]; do
-            printf '%s) %-10.10s: %s\n' ${keys[$cnt]} ${tokens[${keys[$cnt]}]}
+            printf -v lines[$line] '%s%s) %-10.10s: %s%7s' "${lines[$line]}" \
+                ${keys[$cnt]} ${tokens[${keys[$cnt]}]} ''
+            if [ $line -lt $rows ]; then
+                line=$((1 + $line))
+            else
+                line=0
+            fi
             cnt=$((1 + $cnt))
         done
+
+        # Print the columns of tokens
+        clear
+        cnt=0
+        while [ $cnt -lt ${#lines[@]} ]; do
+            echo "${lines[$cnt]}"
+            cnt=$((1 + $cnt))
+        done
+        echo
         echo '0) Exit'
+        echo
     fi
+
+    # Format and print the progress bar, check for key press
     bar=$(printf '%-030.*d' $remaining 0 | tr '0 ' "$barstyle")
     now=$(date '+%Y-%m-%d %H:%M:%S')
     printf '\r   Remaining : %6d %s  %s ' $remaining "$bar" "$now"
