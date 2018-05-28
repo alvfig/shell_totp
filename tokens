@@ -17,7 +17,7 @@ while true; do
         clear
         while read name secret; do
             token=`oathtool --totp --base32 $secret`
-            printf '%-10s: %s\n' $name $token
+            printf '%-10.10s: %s\n' $name $token
         done < $secretsfile
         echo '\nType Ctrl-C to exit'
     fi
