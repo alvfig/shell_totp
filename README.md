@@ -1,9 +1,9 @@
 # shell_totp
 Shell script to show time-based one-time passwords - TOTP. It's like Google Authenticator on a TTY. You execute `tokens` command and view your 2FA codes with a countdown timer.
 
-If `xclip` or `xsel` are installed, you can copy a token to clipboard pressing the correspondig key. Paste with the middle button of the mouse.
+If `xclip` or `xsel` are installed, you can copy a token to clipboard pressing its correspondig key. Paste with the middle button of the mouse.
 
-Digit `0` (zero) to exit.
+Press `0` (zero) to exit.
 ```
 1) Facebook  : 983696       3) Twitter   : 729450       5) Linkdn    : 394880
 2) Google    : 755636       4) Github    : 957090       6) Tumblr    : 538786
