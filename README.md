@@ -1,4 +1,6 @@
 # shell_totp
+[](https://imgur.com/vFJepK9)
+
 Shell script to show time-based one-time passwords - TOTP. It's like Google Authenticator on a TTY. You execute `tokens` command and view your 2FA codes with a countdown timer.
 
 If `xclip` or `xsel` are installed, you can copy a token to clipboard pressing its correspondig key. Paste with the middle button of the mouse.
@@ -25,6 +27,13 @@ $ chmod +x ~/bin/tokens
 Copy the `.tokensrc` setup file to your home directory.
 ```
 $ cp .tokensrc ~/
+```
+It is recommended to install `xclip` or `xsel` so you can copy tokens to clipboard.
+```
+$ sudo apt install xclip
+```
+```
+$ sudo apt install xsel
 ```
 ## Configure
 Create a secrets file like the provided sample one, with a name and a secret at each line, separated by a space.
