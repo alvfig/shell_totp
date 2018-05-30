@@ -28,7 +28,7 @@ Copy the `.tokensrc` setup file to your home directory.
 ```
 $ cp .tokensrc ~/
 ```
-It is recommended to install `xclip` or `xsel` so you can copy tokens to clipboard.
+It is recommended to also install `xclip` or `xsel` so you can copy tokens to clipboard.
 ```
 $ sudo apt install xclip
 ```
