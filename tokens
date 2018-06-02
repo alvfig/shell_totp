@@ -4,76 +4,74 @@
 
 # Initial settings
 rc=~/.tokensrc
-[ -r $rc ] && . $rc
-[ -z "$secretsfile" ] && secretsfile=tokens.secrets
-[ -z "$barsytle" ] && barstyle=':.'
+[[ -r $rc ]] && . $rc
+[[ -z "$secretsfile" ]] && secretsfile=tokens.secrets
+[[ -z "$barsytle" ]] && barstyle=':.'
 XCLIP=""
-[ -z "$XCLIP" ] && which xclip > /dev/null && XCLIP="xclip"
-[ -z "$XCLIP" ] && which xsel > /dev/null && XCLIP="xsel"
+[[ -z "$XCLIP" ]] && which xclip > /dev/null && XCLIP="xclip"
+[[ -z "$XCLIP" ]] && which xsel > /dev/null && XCLIP="xsel"
 
 # Calculate and print the tokens
-lasthalf=-1
+((lasthalf = -1))
 while true; do
     # Eval the time period and verify if must calc the tokens
-    seconds=$(date '+%-S')
-    half=$(($seconds / 30))
-    remaining=$((30 - $seconds % 30))
-    if [ $half -ne $lasthalf ]; then
+    ((seconds = $(date '+%-S')))
+    ((half = seconds / 30))
+    ((remaining = 30 - seconds % 30))
+    if ((half != lasthalf)); then
         # Calculate the tokens
-        lasthalf=$half
+        ((lasthalf = half))
         declare -a keys=({1..9} {a..z} {A..Z})
         declare -A tokens
-        cnt=0
+        ((cnt = 0))
         while read name secret; do
             token=$(oathtool --totp --base32 $secret)
             tokens[${keys[$cnt]}]="$name $token"
-            cnt=$((1 + $cnt))
+            ((++cnt))
         done < $secretsfile
 
         # Format in columns
-        cols=$(($(tput cols) / 28))
-        rows=$((${#tokens[@]} / $cols))
+        ((cols = $(tput cols) / 28))
+        ((rows = ${#tokens[@]} / cols))
         unset lines
         declare -a lines
-        line=0
-        cnt=0
-        while [ $cnt -lt ${#tokens[@]} ]; do
+        ((line = 0))
+        for ((cnt = 0; cnt < ${#tokens[@]}; ++cnt)); do
             printf -v lines[$line] '%s%s) %-10.10s: %s%7s' "${lines[$line]}" \
                 ${keys[$cnt]} ${tokens[${keys[$cnt]}]} ''
-            if [ $line -lt $rows ]; then
-                line=$((1 + $line))
+            if ((line < rows)); then
+                ((++line))
             else
-                line=0
+                ((line = 0))
             fi
-            cnt=$((1 + $cnt))
         done
 
         # Print the columns of tokens
         clear
-        cnt=0
-        while [ $cnt -lt ${#lines[@]} ]; do
+        for ((cnt = 0; cnt < ${#lines[@]}; ++cnt)); do
             echo "${lines[$cnt]}"
-            cnt=$((1 + $cnt))
         done
-        echo
-        echo '0) Exit'
-        echo
+        echo -e '\n0) Exit\n'
     fi
 
-    # Format and print the progress bar, check for key press
+    # Format and print the progress bar
     bar=$(printf '%-030.*d' $remaining 0 | tr '0 ' "$barstyle")
     now=$(date '+%Y-%m-%d %H:%M:%S')
     printf '\r   Remaining : %6d %s  %s ' $remaining "$bar" "$now"
+
+    # Check for key press
     read -N 1 -t 1 -s key
     case "$key" in
         "")
             ;;
         0)
+            # Exit
             echo
             break
             ;;
         [1-9a-zA-Z])
-            [ -n "$XCLIP" ] && [ -n "${tokens[$key]}" ] \
+            # Copy token to clipboard
+            [[ -n "$XCLIP" && -n "${tokens[$key]}" ]] \
                 && echo ${tokens[$key]} | cut -d' ' -f2 | $XCLIP -i
             ;;
     esac
