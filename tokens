@@ -3,8 +3,8 @@
 # Depends on oathtool package
 
 # Initial settings
-[[ -n "$TOKENSRC" ]] && rc="$TOKENSRC" || rc="~/.tokensrc"
-[[ -r "$rc" ]] && source $rc
+[[ -n "$TOKENSRC" ]] && rc="$TOKENSRC" || rc=~/.tokensrc
+[[ -r "$rc" ]] && source "$rc"
 [[ -z "$secretsfile" ]] && secretsfile="tokens.secrets"
 [[ -z "$barsytle" ]] && barstyle=':.'
 XCLIP=""
