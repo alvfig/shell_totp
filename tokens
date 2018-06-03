@@ -3,9 +3,9 @@
 # Depends on oathtool package
 
 # Initial settings
-rc=~/.tokensrc
-[[ -r $rc ]] && . $rc
-[[ -z "$secretsfile" ]] && secretsfile=tokens.secrets
+[[ -n "$TOKENSRC" ]] && rc="$TOKENSRC" || rc="~/.tokensrc"
+[[ -r "$rc" ]] && source $rc
+[[ -z "$secretsfile" ]] && secretsfile="tokens.secrets"
 [[ -z "$barsytle" ]] && barstyle=':.'
 XCLIP=""
 [[ -z "$XCLIP" ]] && which xclip > /dev/null && XCLIP="xclip"
