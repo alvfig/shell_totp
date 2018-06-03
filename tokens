@@ -11,6 +11,9 @@ XCLIP=""
 [[ -z "$XCLIP" ]] && which xclip > /dev/null && XCLIP="xclip"
 [[ -z "$XCLIP" ]] && which xsel > /dev/null && XCLIP="xsel"
 
+# Handle window resizing
+trap '((lasthalf = -1))' SIGWINCH
+
 # Calculate and print the tokens
 ((lasthalf = -1))
 while true; do
