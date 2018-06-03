@@ -40,12 +40,18 @@ $ sudo apt install xsel
 ## Configure
 Create a secrets file like the provided sample one, with a name and a secret at each line, separated by a space.
 ```
-Facebook XXXXXXXXXXXXXXXX
-Google YYYYYYYYYYYYYYYY
-Twitter ZZZZZZZZZZZZZZZZ
-Github GGGGGGGGGGGGGGGG
-Linkdn LLLLLLLLLLLLLLLL
-Tumblr TTTTTTTTTTTTTTTT
+Facetter FFFFFFFFFFFFFFFF
+Gitgle GGGGGGGGGGGGGGGG
+Goohub HHHHHHHHHHHHHHHH
+Instachat IIIIIIIIIIIIIIII
+Linkblr LLLLLLLLLLLLLLLL
+Redck EEEEEEEEEEEEEEEE
+Sladit DDDDDDDDDDDDDDDD
+Snapgram SSSSSSSSSSSSSSSS
+Tindap RRRRRRRRRRRRRRRR
+Tumbdn TTTTTTTTTTTTTTTT
+Twibook BBBBBBBBBBBBBBBB
+Whatsder WWWWWWWWWWWWWWWW
 ```
 Edit the `~/.tokensrc` configuration file, adjusting the variables `secretsfile` and `barstyle` according to your setup.
 
