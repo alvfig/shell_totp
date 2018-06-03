@@ -12,26 +12,30 @@ XCLIP=""
 [[ -z "$XCLIP" ]] && which xsel > /dev/null && XCLIP="xsel"
 
 # Handle window resizing
-trap '((lasthalf = -1))' SIGWINCH
+trap '((redraw = 1))' SIGWINCH
 
 # Calculate and print the tokens
 ((lasthalf = -1))
+((redraw = 1))
 while true; do
     # Eval the time period and verify if must calc the tokens
     ((seconds = $(date '+%-S')))
     ((half = seconds / 30))
     ((remaining = 30 - seconds % 30))
-    if ((half != lasthalf)); then
-        # Calculate the tokens
-        ((lasthalf = half))
-        declare -a keys=({1..9} {a..z} {A..Z})
-        declare -A tokens
-        ((cnt = 0))
-        while read name secret; do
-            token=$(oathtool --totp --base32 $secret)
-            tokens[${keys[$cnt]}]="$name $token"
-            ((++cnt))
-        done < $secretsfile
+    if ((half != lasthalf)) || ((redraw)); then
+        ((redraw = 0))
+        if ((half != lasthalf)); then
+            # Calculate the tokens
+            ((lasthalf = half))
+            declare -a keys=({1..9} {a..z} {A..Z})
+            declare -A tokens
+            ((cnt = 0))
+            while read name secret; do
+                token=$(oathtool --totp --base32 $secret)
+                tokens[${keys[$cnt]}]="$name $token"
+                ((++cnt))
+            done < $secretsfile
+        fi
 
         # Format in columns
         ((cols = $(tput cols) / 28))
