@@ -10,6 +10,7 @@
 XCLIP=""
 [[ -z "$XCLIP" ]] && which xclip > /dev/null && XCLIP="xclip"
 [[ -z "$XCLIP" ]] && which xsel > /dev/null && XCLIP="xsel"
+declare -a keys=({1..9} {a..z} {A..Z})
 
 # Handle window resizing
 trap '((redraw = 1))' SIGWINCH
@@ -27,7 +28,7 @@ while true; do
         if ((half != lasthalf)); then
             # Calculate the tokens
             ((lasthalf = half))
-            declare -a keys=({1..9} {a..z} {A..Z})
+            unset tokens
             declare -A tokens
             ((cnt = 0))
             while read name secret; do
