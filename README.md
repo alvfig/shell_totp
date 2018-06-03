@@ -1,5 +1,5 @@
 # shell_totp
-![gif](https://i.imgur.com/1Aa59Jc.gif)
+![gif](https://i.imgur.com/6KKUP5R.gif)
 
 Shell script to show time-based one-time passwords - TOTP. It's like Google Authenticator on a TTY. You execute `tokens` command and view your 2FA codes with a countdown timer.
 
@@ -7,12 +7,14 @@ If `xclip` or `xsel` are installed you can copy a token to clipboard pressing it
 
 Press `0` (zero) to exit.
 ```
-1) Facebook  : 983696       3) Twitter   : 729450       5) Linkdn    : 394880
-2) Google    : 755636       4) Github    : 957090       6) Tumblr    : 538786
+1) Facetter  : 379139       5) Linkblr   : 963558       9) Tindap    : 964093
+2) Gitgle    : 924596       6) Redck     : 590364       a) Tumbdn    : 895673
+3) Goohub    : 447944       7) Sladit    : 761259       b) Twibook   : 323023
+4) Instachat : 048232       8) Snapgram  : 865829       c) Whatsder  : 612359
 
 0) Exit
 
-   Remaining :      5 :::::.........................  2018-05-28 20:56:25
+   Remaining :     26 ::::::::::::::::::::::::::....  2018-06-03 11:51:04
 ```
 ## Install
 It depends on `oathtool` package. You must install it first, like the example below for Debian based distros.
@@ -63,5 +65,8 @@ $ chmod 0600 ~/bin/tokens.secrets
 Remember that the clock of the system must be correct.
 
 Currently, there is a limit of 61 tokens.
+
+## Fun fact
+At most of the time this software was written and tested using [Termux](https://termux.com/) on Android.
 
 That's it!
