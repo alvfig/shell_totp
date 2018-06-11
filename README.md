@@ -38,7 +38,7 @@ $ sudo apt install xclip
 ```
 $ sudo apt install xsel
 ```
-And if you install `openssl-tool` it can encrypt the secrets file, largely increasing the security of your keys.
+And if you install `openssl-tool` it can encrypt the secrets file, largely increasing the security of your secrets.
 ```
 $ sudo apt install openssl-tool
 ```
@@ -77,7 +77,7 @@ $ chmod 0600 ~/bin/tokens.secrets
 ## Encrypt
 To really protect your secrets file nothing better than encrypt it. The `tokenc` command does this and removes the original secrets file. The next time you run `tokens` it will ask for the passphrase you entered during the encryption.
 
-Later, if you need to add or update your keys, first decrypt the `tokens.secrets.cipher` with the `tokdec` command. After edit the `tokens.secrets` encrypt it again as before.
+Later, if you need to add or update your secrets, first decrypt the `tokens.secrets.cipher` with the `tokdec` command. After edit the `tokens.secrets` encrypt it again as before.
 
 ## Troubleshoot
 Remember that the clock of the system must be correct.
