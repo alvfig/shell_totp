@@ -38,10 +38,6 @@ $ sudo apt install xclip
 ```
 $ sudo apt install xsel
 ```
-And if you install `openssl-tool` it can encrypt the secrets file, largely increasing the security of your secrets.
-```
-$ sudo apt install openssl-tool
-```
 
 ## Configure
 Create a secrets file like the provided sample one, with a name and a secret at each line, separated by a space.

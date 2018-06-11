@@ -72,7 +72,8 @@ while true; do
         unset lines
         declare -a lines
         ((line = 0))
-        for key in ${!tokens[@]}; do
+        for ((cnt = 0; cnt < ${#tokens[@]}; ++cnt)); do
+            key=${keys[$cnt]}
             printf -v lines[$line] '%s%s) %-10.10s: %s%7s' "${lines[$line]}" \
                 $key ${tokens[$key]} ''
             if ((line < rows)); then
