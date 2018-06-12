@@ -75,7 +75,7 @@ while true; do
         for ((cnt = 0; cnt < ${#tokens[@]}; ++cnt)); do
             key=${keys[$cnt]}
             printf -v lines[$line] '%s%s) %-10.10s: %s%7s' "${lines[$line]}" \
-                "$key" "${tokens[$key]}" ''
+                "$key" ${tokens[$key]} ''
             if ((line < rows)); then
                 ((++line))
             else
