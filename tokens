@@ -7,7 +7,7 @@
 [[ -r "$rc" ]] && source "$rc"
 [[ -z "$secretsfile" ]] && secretsfile="tokens.secrets"
 cipherfile="${secretsfile}.cipher"
-[[ -z "$barsytle" ]] && barstyle=':.'
+[[ -z "$barstyle" ]] && barstyle=':.'
 XCLIP=""
 [[ -z "$XCLIP" ]] && which xclip > /dev/null && XCLIP="xclip"
 [[ -z "$XCLIP" ]] && which xsel > /dev/null && XCLIP="xsel"
@@ -59,9 +59,9 @@ while true; do
             ((lasthalf = half))
             unset tokens
             declare -A tokens
-            for key in ${!secrets[@]}; do
-                read name secret < <(echo ${secrets[$key]})
-                token=$(oathtool --totp --base32 $secret)
+            for key in "${!secrets[@]}"; do
+                read name secret < <(echo "${secrets[$key]}")
+                token=$(oathtool --totp --base32 "$secret")
                 tokens[$key]="$name $token"
             done
         fi
@@ -75,7 +75,7 @@ while true; do
         for ((cnt = 0; cnt < ${#tokens[@]}; ++cnt)); do
             key=${keys[$cnt]}
             printf -v lines[$line] '%s%s) %-10.10s: %s%7s' "${lines[$line]}" \
-                $key ${tokens[$key]} ''
+                "$key" "${tokens[$key]}" ''
             if ((line < rows)); then
                 ((++line))
             else
@@ -109,7 +109,7 @@ while true; do
         [1-9a-zA-Z])
             # Copy token to clipboard
             [[ -n "$XCLIP" && -n "${tokens[$key]}" ]] \
-                && echo ${tokens[$key]} | cut -d' ' -f2 | $XCLIP -i
+                && echo "${tokens[$key]}" | cut -d' ' -f2 | $XCLIP -i
             ;;
     esac
 done
