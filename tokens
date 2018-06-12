@@ -59,9 +59,9 @@ while true; do
             ((lasthalf = half))
             unset tokens
             declare -A tokens
-            for key in ${!secrets[@]}; do
-                read name secret < <(echo ${secrets[$key]})
-                token=$(oathtool --totp --base32 $secret)
+            for key in "${!secrets[@]}"; do
+                read name secret < <(echo "${secrets[$key]}")
+                token=$(oathtool --totp --base32 "$secret")
                 tokens[$key]="$name $token"
             done
         fi
