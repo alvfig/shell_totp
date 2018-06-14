@@ -1,5 +1,5 @@
 # shell_totp
-![gif](https://i.imgur.com/Z4AFXSc.gif)
+![gif](https://i.imgur.com/AJ63BuV.gif)
 
 Shell script to show time-based one-time passwords - TOTP. It's like Google Authenticator on a TTY. You execute `tokens` command and view your 2FA codes with a countdown timer.
 
