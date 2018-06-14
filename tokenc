@@ -1,0 +1,38 @@
+#!/bin/bash
+# tokenc - Encrypt tokens.secrets
+# Depends on openssl-tool package
+
+# Check the dependency
+if ! which openssl > /dev/null; then
+    echo "openssl not found"
+    exit 1
+fi
+
+# Initial settings
+[[ -n "$TOKENSRC" ]] && rc="$TOKENSRC" || rc=~/.tokensrc
+[[ -r "$rc" ]] && source "$rc"
+[[ -z "$secretsfile" ]] && secretsfile="tokens.secrets"
+cipherfile="${secretsfile}.cipher"
+
+# Pick the passphrase
+((pass0 = "0"))
+((pass1 = "1"))
+while true; do
+    read -sp "Enter the passphrase: " pass0; echo
+    if [[ ${#pass0} -lt 4 ]]; then
+        echo "The length of the passphrase must be at least four characters"
+        continue
+    fi
+    read -sp "Repeat the passphrase: " pass1; echo
+    if [[ $pass0 != $pass1 ]]; then
+        echo "The passphrase differs from its verification"
+        continue
+    fi
+    break
+done
+((tokpass = pass0))
+export tokpass
+
+# Encrypt the secrets file
+openssl enc -aes128 -e -in <(gzip -c "$secretsfile") -out "$cipherfile" -pass env:tokpass
+[[ 0 -eq $? ]] && rm -f "$secretsfile"

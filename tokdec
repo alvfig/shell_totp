@@ -1,0 +1,24 @@
+#!/bin/bash
+# tokdec - Decrypt tokens.secrets
+# Depends on openssl-tool package
+
+# Check the dependency
+if ! which openssl > /dev/null; then
+    echo "openssl not found"
+    exit 1
+fi
+
+# Initial settings
+[[ -n "$TOKENSRC" ]] && rc="$TOKENSRC" || rc=~/.tokensrc
+[[ -r "$rc" ]] && source "$rc"
+[[ -z "$secretsfile" ]] && secretsfile="tokens.secrets"
+cipherfile="${secretsfile}.cipher"
+
+# Pick the passphrase
+read -sp "Enter the passphrase: " pass; echo
+((tokpass = pass))
+export tokpass
+
+# Decrypt the secrets file
+openssl enc -aes128 -d -in "$cipherfile" -pass env:tokpass | gzip -d > "$secretsfile"
+[[ 0 != $? ]] && echo "Check the passphrase"

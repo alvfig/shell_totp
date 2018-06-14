@@ -6,6 +6,7 @@
 [[ -n "$TOKENSRC" ]] && rc="$TOKENSRC" || rc=~/.tokensrc
 [[ -r "$rc" ]] && source "$rc"
 [[ -z "$secretsfile" ]] && secretsfile="tokens.secrets"
+cipherfile="${secretsfile}.cipher"
 [[ -z "$barstyle" ]] && barstyle=':.'
 XCLIP=""
 [[ -z "$XCLIP" ]] && which xclip > /dev/null && XCLIP="xclip"
@@ -14,6 +15,34 @@ declare -ar keys=({1..9} {a..z} {A..Z})
 
 # Handle window resizing
 trap '((redraw = 1))' SIGWINCH
+
+# Load the secrets
+if [[ -f "$cipherfile" ]]; then
+    # Decrypt the secrets file
+    if ! which openssl > /dev/null; then
+        echo "openssl not found"
+        exit 1
+    fi
+    read -sp "Enter the passphrase: " pass
+    export pass
+    origin="openssl enc -aes128 -d -in '$cipherfile' -pass env:pass"
+    sh -c "$origin" > /dev/null
+    if [[ 0 != $? ]]; then
+        echo
+        echo "Check the passphrase"
+        exit 1
+    fi
+    origin="$origin | gzip -d"
+else
+    origin="cat '$secretsfile'"
+fi
+declare -A secrets
+((cnt = 0))
+while read name secret; do
+    secrets[${keys[$cnt]}]="$name $secret"
+    ((++cnt))
+done < <(sh -c "$origin")
+unset pass
 
 # Calculate and print the tokens
 ((lasthalf = -1))
@@ -30,12 +59,11 @@ while true; do
             ((lasthalf = half))
             unset tokens
             declare -A tokens
-            ((cnt = 0))
-            while read name secret; do
+            for key in "${!secrets[@]}"; do
+                read name secret <<< "${secrets[$key]}"
                 token=$(oathtool --totp --base32 "$secret")
-                tokens[${keys[$cnt]}]="$name $token"
-                ((++cnt))
-            done < $secretsfile
+                tokens[$key]="$name $token"
+            done
         fi
 
         # Format in columns
