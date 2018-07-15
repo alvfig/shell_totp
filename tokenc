@@ -9,9 +9,9 @@ if ! which openssl > /dev/null; then
 fi
 
 # Initial settings
-[[ -n "$TOKENSRC" ]] && rc="$TOKENSRC" || rc=~/.tokensrc
+rc=${TOKENSRC:-~/.tokensrc}
 [[ -r "$rc" ]] && source "$rc"
-[[ -z "$secretsfile" ]] && secretsfile="tokens.secrets"
+secretsfile=${secretsfile:-tokens.secrets}
 cipherfile="${secretsfile}.cipher"
 
 # Pick the passphrase
