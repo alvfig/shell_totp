@@ -20,7 +20,7 @@ trap '((redraw = 1))' SIGWINCH
 if [[ -f "$cipherfile" ]]; then
     # Decrypt the secrets file
     if ! which openssl > /dev/null; then
-        echo "openssl not found"
+        echo "openssl not found" 1>&2
         exit 1
     fi
     read -sp "Enter the passphrase: " pass
@@ -28,8 +28,8 @@ if [[ -f "$cipherfile" ]]; then
     origin="openssl enc -aes128 -d -in '$cipherfile' -pass env:pass"
     sh -c "$origin" > /dev/null
     if [[ 0 != $? ]]; then
-        echo
-        echo "Check the passphrase"
+        echo 1>&2
+        echo "Check the passphrase" 1>&2
         exit 1
     fi
     origin="$origin | gzip -d"

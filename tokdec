@@ -4,7 +4,7 @@
 
 # Check the dependency
 if ! which openssl > /dev/null; then
-    echo "openssl not found"
+    echo "openssl not found" 1>&2
     exit 1
 fi
 
@@ -15,10 +15,9 @@ fi
 cipherfile="${secretsfile}.cipher"
 
 # Pick the passphrase
-read -sp "Enter the passphrase: " pass; echo
-((tokpass = pass))
+read -sp "Enter the passphrase: " tokpass; echo 1>&2
 export tokpass
 
 # Decrypt the secrets file
 openssl enc -aes128 -d -in "$cipherfile" -pass env:tokpass | gzip -d > "$secretsfile"
-[[ 0 != $? ]] && echo "Check the passphrase"
+[[ 0 != $? ]] && echo "Check the passphrase" 1>&2

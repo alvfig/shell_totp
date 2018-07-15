@@ -4,7 +4,7 @@
 
 # Check the dependency
 if ! which openssl > /dev/null; then
-    echo "openssl not found"
+    echo "openssl not found" 1>&2
     exit 1
 fi
 
@@ -15,22 +15,21 @@ fi
 cipherfile="${secretsfile}.cipher"
 
 # Pick the passphrase
-((pass0 = "0"))
-((pass1 = "1"))
+((tokpass = "0"))
+((verpass = "1"))
 while true; do
-    read -sp "Enter the passphrase: " pass0; echo
-    if [[ ${#pass0} -lt 4 ]]; then
-        echo "The length of the passphrase must be at least four characters"
+    read -sp "Enter the passphrase: " tokpass; echo 1>&2
+    if [[ ${#tokpass} -lt 4 ]]; then
+        echo "Length of the passphrase must be at least four characters" 1>&2
         continue
     fi
-    read -sp "Repeat the passphrase: " pass1; echo
-    if [[ $pass0 != $pass1 ]]; then
-        echo "The passphrase differs from its verification"
+    read -sp "Repeat the passphrase: " verpass; echo 1>&2
+    if [[ $tokpass != $verpass ]]; then
+        echo "The passphrase differs from its verification" 1>&2
         continue
     fi
     break
 done
-((tokpass = pass0))
 export tokpass
 
 # Encrypt the secrets file
