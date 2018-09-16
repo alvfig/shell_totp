@@ -33,5 +33,5 @@ done
 export tokpass
 
 # Encrypt the secrets file
-openssl enc -aes128 -e -in <(gzip -c "$secretsfile") -out "$cipherfile" -pass env:tokpass
+openssl enc -aes128 -e -in <(gzip -c "$secretsfile") -out "$cipherfile" -pass env:tokpass -pbkdf2
 [[ 0 -eq $? ]] && rm -f "$secretsfile"

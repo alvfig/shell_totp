@@ -19,5 +19,5 @@ read -sp "Enter the passphrase: " tokpass; echo 1>&2
 export tokpass
 
 # Decrypt the secrets file
-openssl enc -aes128 -d -in "$cipherfile" -pass env:tokpass | gzip -d > "$secretsfile"
+openssl enc -aes128 -d -in "$cipherfile" -pass env:tokpass -pbkdf2 | gzip -d > "$secretsfile"
 [[ 0 != $? ]] && echo "Check the passphrase" 1>&2
