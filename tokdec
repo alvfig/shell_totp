@@ -3,7 +3,7 @@
 # Depends on openssl-tool package
 
 # Check the dependency
-if ! which openssl > /dev/null; then
+if ! command -v openssl > /dev/null; then
     echo "openssl not found" 1>&2
     exit 1
 fi
@@ -20,4 +20,4 @@ export tokpass
 
 # Decrypt the secrets file
 openssl enc -aes128 -d -in "$cipherfile" -pass env:tokpass -pbkdf2 | gzip -d > "$secretsfile"
-[[ 0 != $? ]] && echo "Check the passphrase" 1>&2
+[[ 0 -ne $? ]] && echo "Check the passphrase" 1>&2

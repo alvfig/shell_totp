@@ -2,6 +2,12 @@
 # tokens - shows time-based one-time passwords - TOTP
 # Depends on oathtool package
 
+# Check for main dependency
+if ! command -v oathtool > /dev/null; then
+    echo "oathtool not found" 1>&2
+    exit 1
+fi
+
 # Initial settings
 rc=${TOKENSRC:-~/.tokensrc}
 [[ -r "$rc" ]] && source "$rc"
@@ -9,8 +15,8 @@ secretsfile=${secretsfile:-tokens.secrets}
 cipherfile="${secretsfile}.cipher"
 barstyle=${barstyle:-:.}
 XCLIP=""
-[[ -z "$XCLIP" ]] && which xclip > /dev/null && XCLIP="xclip"
-[[ -z "$XCLIP" ]] && which xsel > /dev/null && XCLIP="xsel"
+[[ -z "$XCLIP" ]] && command -v xclip > /dev/null && XCLIP="xclip"
+[[ -z "$XCLIP" ]] && command -v xsel > /dev/null && XCLIP="xsel"
 declare -ar keys=({1..9} {a..z} {A..Z})
 
 # Handle window resizing
@@ -19,15 +25,14 @@ trap '((redraw = 1))' SIGWINCH
 # Load the secrets
 if [[ -f "$cipherfile" ]]; then
     # Decrypt the secrets file
-    if ! which openssl > /dev/null; then
+    if ! command -v openssl > /dev/null; then
         echo "openssl not found" 1>&2
         exit 1
     fi
     read -sp "Enter the passphrase: " pass
     export pass
     origin="openssl enc -aes128 -d -in '$cipherfile' -pass env:pass -pbkdf2"
-    sh -c "$origin" > /dev/null
-    if [[ 0 != $? ]]; then
+    if ! sh -c "$origin" > /dev/null; then
         echo 1>&2
         echo "Check the passphrase" 1>&2
         exit 1

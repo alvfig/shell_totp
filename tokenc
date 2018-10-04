@@ -3,7 +3,7 @@
 # Depends on openssl-tool package
 
 # Check the dependency
-if ! which openssl > /dev/null; then
+if ! command -v openssl > /dev/null; then
     echo "openssl not found" 1>&2
     exit 1
 fi
