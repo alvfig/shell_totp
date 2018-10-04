@@ -3,9 +3,21 @@
 # Depends on openssl-tool package
 
 # Check the dependency
-if ! which openssl > /dev/null; then
+if ! command -v openssl > /dev/null; then
     echo "openssl not found" 1>&2
     exit 1
+fi
+
+# Check if the version of OpenSSL is 1.1.1 or greater and add -pbkdf2 parameter
+ossl111=""
+read vmajor vminor vpatch <<< $(openssl version | while read o v rr; do echo ${v//./ }; done)
+read vmajor vminor vpatch <<< "${vmajor//[^0-9]/} ${vminor//[^0-9]/} ${vpatch//[^0-9]/}"
+if [[
+        1 -lt $vmajor
+        || (1 -eq $vmajor && 1 -lt $vminor)
+        || (1 -eq $vmajor && 1 -eq $vminor && 1 -le $vpatch)
+    ]]; then
+    ossl111="-pbkdf2" 
 fi
 
 # Initial settings
@@ -33,5 +45,5 @@ done
 export tokpass
 
 # Encrypt the secrets file
-openssl enc -aes128 -e -in <(gzip -c "$secretsfile") -out "$cipherfile" -pass env:tokpass
+openssl enc -aes128 -e -in <(gzip -c "$secretsfile") -out "$cipherfile" -pass env:tokpass $ossl111
 [[ 0 -eq $? ]] && rm -f "$secretsfile"
