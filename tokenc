@@ -8,6 +8,17 @@ if ! command -v openssl > /dev/null; then
     exit 1
 fi
 
+# Check if the version of OpenSSL is 1.1.1 or greater and add -pbkdf2 parameter
+ossl111=""
+read vmajor vminor vpatch <<< $(openssl version | while read o v rr; do echo ${v//./ }; done)
+if [[
+        1 -lt $vmajor
+        || (1 -eq $vmajor && 1 -lt $vminor)
+        || (1 -eq $vmajor && 1 -eq $vminor && 1 -le $vpatch)
+    ]]; then
+    ossl111="-pbkdf2" 
+fi
+
 # Initial settings
 rc=${TOKENSRC:-~/.tokensrc}
 [[ -r "$rc" ]] && source "$rc"
@@ -33,5 +44,5 @@ done
 export tokpass
 
 # Encrypt the secrets file
-openssl enc -aes128 -e -in <(gzip -c "$secretsfile") -out "$cipherfile" -pass env:tokpass -pbkdf2
+openssl enc -aes128 -e -in <(gzip -c "$secretsfile") -out "$cipherfile" -pass env:tokpass $ossl111
 [[ 0 -eq $? ]] && rm -f "$secretsfile"

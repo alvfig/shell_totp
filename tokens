@@ -29,9 +29,24 @@ if [[ -f "$cipherfile" ]]; then
         echo "openssl not found" 1>&2
         exit 1
     fi
+
+    # Check if the version of OpenSSL is 1.1.1 or greater and add -pbkdf2 parameter
+    ossl111=""
+    read vmajor vminor vpatch <<< $(openssl version | while read o v rr; do echo ${v//./ }; done)
+    if [[
+            1 -lt $vmajor
+            || (1 -eq $vmajor && 1 -lt $vminor)
+            || (1 -eq $vmajor && 1 -eq $vminor && 1 -le $vpatch)
+        ]]; then
+        ossl111="-pbkdf2" 
+    fi
+
+    # Input the passphrase
     read -sp "Enter the passphrase: " pass
     export pass
-    origin="openssl enc -aes128 -d -in '$cipherfile' -pass env:pass -pbkdf2"
+
+    # Decrypt the secrets file
+    origin="openssl enc -aes128 -d -in '$cipherfile' -pass env:pass $ossl111"
     if ! sh -c "$origin" > /dev/null; then
         echo 1>&2
         echo "Check the passphrase" 1>&2
