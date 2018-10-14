@@ -47,5 +47,6 @@ done
 export tokpass
 
 # Encrypt the secrets file
-openssl enc -aes128 -e -in <(gzip -c "$secretsfile") -out "$cipherfile" -pass env:tokpass $ossl111
-[[ 0 -eq $? ]] && rm -f "$secretsfile"
+if openssl enc -aes128 -e -in <(gzip -c "$secretsfile") -out "$cipherfile" -pass env:tokpass $ossl111; then
+    rm -f "$secretsfile"
+fi

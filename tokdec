@@ -33,5 +33,6 @@ read -rsp "Enter the passphrase: " tokpass; echo 1>&2
 export tokpass
 
 # Decrypt the secrets file
-openssl enc -aes128 -d -in "$cipherfile" -pass env:tokpass $ossl111 | gzip -d > "$secretsfile"
-[[ 0 -ne $? ]] && echo "Check the passphrase" 1>&2
+if ! openssl enc -aes128 -d -in "$cipherfile" -pass env:tokpass $ossl111 | gzip -d > "$secretsfile"; then
+    echo "Check the passpharse" 1>&2
+fi
