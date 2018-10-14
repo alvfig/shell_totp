@@ -10,8 +10,10 @@ fi
 
 # Check if the version of OpenSSL is 1.1.1 or greater and add -pbkdf2 parameter
 ossl111=""
-read vmajor vminor vpatch <<< $(openssl version | while read o v rr; do echo ${v//./ }; done)
-read vmajor vminor vpatch <<< "${vmajor//[^0-9]/} ${vminor//[^0-9]/} ${vpatch//[^0-9]/}"
+read -r vmajor vminor vpatch <<< $(
+    openssl version | while read -ra v; do v1="${v[1]}"; echo "${v1//./ }"; done
+)
+read -r vmajor vminor vpatch <<< "${vmajor//[^0-9]/} ${vminor//[^0-9]/} ${vpatch//[^0-9]/}"
 if [[
         1 -lt $vmajor
         || (1 -eq $vmajor && 1 -lt $vminor)
