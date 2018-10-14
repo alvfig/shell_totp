@@ -45,7 +45,7 @@ if [[ -f "$cipherfile" ]]; then
     fi
 
     # Input the passphrase
-    read -sp "Enter the passphrase: " pass
+    read -rsp "Enter the passphrase: " pass
     export pass
 
     # Decrypt the secrets file
@@ -61,7 +61,7 @@ else
 fi
 declare -A secrets
 ((cnt = 0))
-while read name secret; do
+while read -r name secret; do
     secrets[${keys[$cnt]}]="$name $secret"
     ((++cnt))
 done < <(sh -c "$origin")
@@ -83,7 +83,7 @@ while true; do
             unset tokens
             declare -A tokens
             for key in "${!secrets[@]}"; do
-                read name secret <<< "${secrets[$key]}"
+                read -r name secret <<< "${secrets[$key]}"
                 token=$(oathtool --totp --base32 "$secret")
                 tokens[$key]="$name $token"
             done
@@ -97,7 +97,7 @@ while true; do
         ((line = 0))
         for ((cnt = 0; cnt < ${#tokens[@]}; ++cnt)); do
             key=${keys[$cnt]}
-            read name token <<< "${tokens[$key]}"
+            read -r name token <<< "${tokens[$key]}"
             printf -v lines[$line] '%s%s) %-10.10s: %s%7s' "${lines[$line]}" \
                 "$key" "$name" "$token" ''
             ((line = line < rows? ++line: 0))
@@ -119,7 +119,7 @@ while true; do
     printf '\r   Remaining : %6d %s  %s ' $remaining "$bar" "$now"
 
     # Check for key press
-    read -N 1 -t 1 -s key
+    read -N 1 -t 1 -rs key
     case "$key" in
         "")
             ;;
@@ -131,7 +131,7 @@ while true; do
         [1-9a-zA-Z])
             # Copy token to clipboard
             if [[ -n "$XCLIP" && -n "${tokens[$key]}" ]]; then
-                read name token <<< "${tokens[$key]}"
+                read -r name token <<< "${tokens[$key]}"
                 $XCLIP -i <<< "$token"
             fi
             ;;

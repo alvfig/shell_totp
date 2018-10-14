@@ -32,12 +32,12 @@ cipherfile="${secretsfile}.cipher"
 ((tokpass = "0"))
 ((verpass = "1"))
 while true; do
-    read -sp "Enter the passphrase: " tokpass; echo 1>&2
+    read -rsp "Enter the passphrase: " tokpass; echo 1>&2
     if [[ ${#tokpass} -lt 4 ]]; then
         echo "Length of the passphrase must be at least four characters" 1>&2
         continue
     fi
-    read -sp "Repeat the passphrase: " verpass; echo 1>&2
+    read -rsp "Repeat the passphrase: " verpass; echo 1>&2
     if [[ $tokpass != $verpass ]]; then
         echo "The passphrase differs from its verification" 1>&2
         continue

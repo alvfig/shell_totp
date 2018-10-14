@@ -29,7 +29,7 @@ secretsfile=${secretsfile:-tokens.secrets}
 cipherfile="${secretsfile}.cipher"
 
 # Pick the passphrase
-read -sp "Enter the passphrase: " tokpass; echo 1>&2
+read -rsp "Enter the passphrase: " tokpass; echo 1>&2
 export tokpass
 
 # Decrypt the secrets file
