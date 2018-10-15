@@ -10,9 +10,9 @@ fi
 
 # Check if the version of OpenSSL is 1.1.1 or greater and add -pbkdf2 parameter
 ossl111=""
-read -r vmajor vminor vpatch <<< $(
+read -r vmajor vminor vpatch <<< "$(
     openssl version | while read -ra v; do v1="${v[1]}"; echo "${v1//./ }"; done
-)
+)"
 read -r vmajor vminor vpatch <<< "${vmajor//[^0-9]/} ${vminor//[^0-9]/} ${vpatch//[^0-9]/}"
 if [[
         1 -lt $vmajor
@@ -24,6 +24,7 @@ fi
 
 # Initial settings
 rc=${TOKENSRC:-~/.tokensrc}
+# shellcheck source=.tokensrc
 [[ -r "$rc" ]] && source "$rc"
 secretsfile=${secretsfile:-tokens.secrets}
 cipherfile="${secretsfile}.cipher"
