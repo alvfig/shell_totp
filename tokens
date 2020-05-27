@@ -8,6 +8,12 @@ if ! command -v oathtool > /dev/null; then
     exit 1
 fi
 
+# Check for ncurses-tools dependency
+if ! command -v tput > /dev/null; then
+    echo "tput not found" 1>&2
+    exit 1
+fi
+
 # Initial settings
 rc=${TOKENSRC:-~/.tokensrc}
 # shellcheck source=.tokensrc
