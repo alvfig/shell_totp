@@ -16,6 +16,7 @@ secretsfile=${secretsfile:-tokens.secrets}
 cipherfile="${secretsfile}.cipher"
 barstyle=${barstyle:-:.}
 XCLIP=""
+[[ -z "$XCLIP" ]] && command -v termux-clipboard-set > /dev/null && XCLIP="termux-clipboard-set"
 [[ -z "$XCLIP" ]] && command -v xclip > /dev/null && XCLIP="xclip -selection c"
 [[ -z "$XCLIP" ]] && command -v xsel > /dev/null && XCLIP="xsel -ib"
 declare -ar keys=({1..9} {a..z} {A..Z})
