@@ -8,12 +8,6 @@ if ! command -v oathtool > /dev/null; then
     exit 1
 fi
 
-# Check for ncurses-tools dependency
-if ! command -v tput > /dev/null; then
-    echo "tput not found" 1>&2
-    exit 1
-fi
-
 # Initial settings
 rc=${TOKENSRC:-~/.tokensrc}
 # shellcheck source=.tokensrc
@@ -21,6 +15,7 @@ rc=${TOKENSRC:-~/.tokensrc}
 secretsfile=${secretsfile:-tokens.secrets}
 cipherfile="${secretsfile}.cipher"
 barstyle=${barstyle:-:.}
+COLSIZE=28
 XCLIP=""
 [[ -z "$XCLIP" ]] && command -v termux-clipboard-set > /dev/null && XCLIP="termux-clipboard-set"
 [[ -z "$XCLIP" ]] && command -v xclip > /dev/null && XCLIP="xclip -selection c"
@@ -98,7 +93,7 @@ while true; do
         fi
 
         # Format in columns
-        ((cols = $(tput cols) / 28))
+        ((cols = $(bash -i -c 'echo $COLUMNS') / $COLSIZE))
         ((rows = ${#tokens[@]} / cols))
         unset lines
         declare -a lines
