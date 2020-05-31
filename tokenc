@@ -10,9 +10,9 @@ fi
 
 # Check if the version of OpenSSL is 1.1.1 or greater and add -pbkdf2 parameter
 ossl111=""
-read -r vmajor vminor vpatch <<< $(
+read -r vmajor vminor vpatch <<< "$(
     openssl version | while read -ra v; do v1="${v[1]}"; echo "${v1//./ }"; done
-)
+)"
 read -r vmajor vminor vpatch <<< "${vmajor//[^0-9]/} ${vminor//[^0-9]/} ${vpatch//[^0-9]/}"
 if [[
         1 -lt $vmajor
@@ -24,6 +24,7 @@ fi
 
 # Initial settings
 rc=${TOKENSRC:-~/.tokensrc}
+# shellcheck source=.tokensrc
 [[ -r "$rc" ]] && source "$rc"
 secretsfile=${secretsfile:-tokens.secrets}
 cipherfile="${secretsfile}.cipher"
@@ -32,13 +33,13 @@ cipherfile="${secretsfile}.cipher"
 ((tokpass = "0"))
 ((verpass = "1"))
 while true; do
-    read -sp "Enter the passphrase: " tokpass; echo 1>&2
+    read -rsp "Enter the passphrase: " tokpass; echo 1>&2
     if [[ ${#tokpass} -lt 4 ]]; then
         echo "Length of the passphrase must be at least four characters" 1>&2
         continue
     fi
-    read -sp "Repeat the passphrase: " verpass; echo 1>&2
-    if [[ $tokpass != $verpass ]]; then
+    read -rsp "Repeat the passphrase: " verpass; echo 1>&2
+    if [[ "$tokpass" != "$verpass" ]]; then
         echo "The passphrase differs from its verification" 1>&2
         continue
     fi
@@ -47,5 +48,6 @@ done
 export tokpass
 
 # Encrypt the secrets file
-openssl enc -aes128 -e -in <(gzip -c "$secretsfile") -out "$cipherfile" -pass env:tokpass $ossl111
-[[ 0 -eq $? ]] && rm -f "$secretsfile"
+if openssl enc -aes128 -e -in <(gzip -c "$secretsfile") -out "$cipherfile" -pass env:tokpass $ossl111; then
+    rm -f "$secretsfile"
+fi

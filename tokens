@@ -8,13 +8,21 @@ if ! command -v oathtool > /dev/null; then
     exit 1
 fi
 
+# Check for ncurses-tools dependency
+if ! command -v tput > /dev/null; then
+    echo "tput not found" 1>&2
+    exit 1
+fi
+
 # Initial settings
 rc=${TOKENSRC:-~/.tokensrc}
+# shellcheck source=.tokensrc
 [[ -r "$rc" ]] && source "$rc"
 secretsfile=${secretsfile:-tokens.secrets}
 cipherfile="${secretsfile}.cipher"
 barstyle=${barstyle:-:.}
 XCLIP=""
+[[ -z "$XCLIP" ]] && command -v termux-clipboard-set > /dev/null && XCLIP="termux-clipboard-set"
 [[ -z "$XCLIP" ]] && command -v xclip > /dev/null && XCLIP="xclip -selection c"
 [[ -z "$XCLIP" ]] && command -v xsel > /dev/null && XCLIP="xsel -ib"
 declare -ar keys=({1..9} {a..z} {A..Z})
@@ -32,9 +40,9 @@ if [[ -f "$cipherfile" ]]; then
 
     # Check if the version of OpenSSL is 1.1.1 or greater and add -pbkdf2 parameter
     ossl111=""
-    read -r vmajor vminor vpatch <<< $(
+    read -r vmajor vminor vpatch <<< "$(
         openssl version | while read -ra v; do v1="${v[1]}"; echo "${v1//./ }"; done
-    )
+    )"
     read -r vmajor vminor vpatch <<< "${vmajor//[^0-9]/} ${vminor//[^0-9]/} ${vpatch//[^0-9]/}"
     if [[
             1 -lt $vmajor
@@ -45,7 +53,7 @@ if [[ -f "$cipherfile" ]]; then
     fi
 
     # Input the passphrase
-    read -sp "Enter the passphrase: " pass
+    read -rsp "Enter the passphrase: " pass
     export pass
 
     # Decrypt the secrets file
@@ -61,7 +69,7 @@ else
 fi
 declare -A secrets
 ((cnt = 0))
-while read name secret; do
+while read -r name secret; do
     secrets[${keys[$cnt]}]="$name $secret"
     ((++cnt))
 done < <(sh -c "$origin")
@@ -83,7 +91,7 @@ while true; do
             unset tokens
             declare -A tokens
             for key in "${!secrets[@]}"; do
-                read name secret <<< "${secrets[$key]}"
+                read -r name secret <<< "${secrets[$key]}"
                 token=$(oathtool --totp --base32 "$secret")
                 tokens[$key]="$name $token"
             done
@@ -97,7 +105,7 @@ while true; do
         ((line = 0))
         for ((cnt = 0; cnt < ${#tokens[@]}; ++cnt)); do
             key=${keys[$cnt]}
-            read name token <<< "${tokens[$key]}"
+            read -r name token <<< "${tokens[$key]}"
             printf -v lines[$line] '%s%s) %-10.10s: %s%7s' "${lines[$line]}" \
                 "$key" "$name" "$token" ''
             ((line = line < rows? ++line: 0))
@@ -119,7 +127,7 @@ while true; do
     printf '\r   Remaining : %6d %s  %s ' $remaining "$bar" "$now"
 
     # Check for key press
-    read -N 1 -t 1 -s key
+    read -N 1 -t 1 -rs key
     case "$key" in
         "")
             ;;
@@ -131,7 +139,7 @@ while true; do
         [1-9a-zA-Z])
             # Copy token to clipboard
             if [[ -n "$XCLIP" && -n "${tokens[$key]}" ]]; then
-                read name token <<< "${tokens[$key]}"
+                read -r name token <<< "${tokens[$key]}"
                 $XCLIP <<< "$token"
             fi
             ;;
